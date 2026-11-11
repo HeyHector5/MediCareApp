@@ -1,9 +1,10 @@
 # MediCare App — Branding y reglas de diseño
 
-> **Instrucciones para la IA:** Este archivo es la guía de diseño obligatoria del proyecto MediCare App (Flutter + Firebase).
-> Todo el código, las pantallas y los textos que generes deben cumplir estas reglas **sin excepciones**.
-> Si algo no está definido aquí, no lo inventes: usa el valor más cercano de esta guía y avisa al usuario de que falta una regla.
-> Si una petición del usuario contradice esta guía, señálalo antes de generar el código.
+> Este archivo es la guía de diseño obligatoria del proyecto MediCare App.
+> Todo el código, las pantallas y los textos deben cumplir estas reglas **sin excepciones**.
+> Si algo no está definido aquí, no inventarlo: usa el valor más cercano de esta guía y avisa al usuario de que falta una regla.
+>
+> Todo lo que es código o base de datos va en **inglés** (clases, variables, funciones, colecciones, campos y valores guardados en Firestore). Solo los textos que ve el usuario van en **español**. Los nombres de colecciones, campos y valores están en `docs/data-model.md`: usarlos exactamente así.
 
 ---
 
@@ -180,22 +181,26 @@ Todos viven en `lib/core/widgets/`. **Usa siempre el widget común; nunca crees 
 
 ### Estados de cita — `StatusChip`
 
-Usa **exactamente** estos nombres, en la app y en Firestore:
+En Firestore el estado se guarda en inglés (campo `status`, ver `data-model.md`). En pantalla se muestra en español con este chip:
 
-| Estado | Texto visible | Color texto | Fondo |
+| Valor en Firestore | Texto visible | Color texto | Fondo |
 | --- | --- | --- | --- |
-| Programada | Programada | `#0277BD` | `#E3F2FD` |
-| Completada | Completada | `#2E7D32` | `#E8F5E9` |
-| Cancelada | Cancelada | `#D32F2F` | `#FDECEC` |
-| Próxima (menos de 24 h) | Hoy / Mañana | `#9A5B00` | `#FFF4E0` |
+| `scheduled` | Programada | `#0277BD` | `#E3F2FD` |
+| `completed` | Completada | `#2E7D32` | `#E8F5E9` |
+| `cancelled` | Cancelada | `#D32F2F` | `#FDECEC` |
+| `scheduled` y faltan menos de 24 h | Hoy / Mañana | `#9A5B00` | `#FFF4E0` |
+
+"Hoy" y "Mañana" no se guardan: se calculan con `startAt`. No inventes estados nuevos.
 
 Radio completo, padding horizontal 12, texto `labelSmall`.
 
 ### Navegación
 
-- **Menú inferior** (`NavigationBar`), 4 pestañas en este orden: Inicio, Mis citas, Mensajes, Perfil. Activo `primary`, inactivo `textSecondary`.
+- **Menú inferior del paciente** (`NavigationBar`), 4 pestañas en este orden: Inicio, Mis citas, Mensajes, Perfil.
+- **Menú inferior del médico**, 4 pestañas en este orden: Agenda, Pacientes, Mensajes, Perfil.
+- En ambos: activo `primary` con indicador `primaryLight`, inactivo `textSecondary`.
 - **AppBar:** fondo `background`, sin sombra, título `titleLarge` a la izquierda, flecha de regreso en pantallas internas.
-- Login, registro y videollamada **no** muestran el menú inferior.
+- **No** muestran el menú inferior: login, registro, reservar cita, cita confirmada, videollamada, chat, registro de la consulta y disponibilidad del médico. Son pantallas de una tarea con su propio botón o campo abajo.
 
 ### Diálogos y avisos
 
@@ -220,6 +225,8 @@ Radio completo, padding horizontal 12, texto `labelSmall`.
 | Hora | `Icons.schedule_rounded` |
 | Videollamada | `Icons.videocam_rounded` |
 | Historial | `Icons.history_rounded` |
+| Pacientes (médico) | `Icons.group_rounded` |
+| Disponibilidad (médico) | `Icons.event_available_rounded` |
 | Notificaciones | `Icons.notifications_rounded` |
 | Búsqueda | `Icons.search_rounded` |
 | Error | `Icons.error_outline_rounded` |
@@ -490,5 +497,7 @@ class AppTheme {
 - [ ] La pantalla maneja carga, vacío y error.
 - [ ] Los textos están en español, de tú, cortos, sin tecnicismos y sin faltas de ortografía.
 - [ ] Fechas y horas con `formatters.dart`.
-- [ ] Estados de cita con `StatusChip` y los nombres exactos.
+- [ ] Estados de cita con `StatusChip`, leyendo los valores en inglés de Firestore (`scheduled`, `completed`, `cancelled`).
+- [ ] Código, colecciones, campos y valores en inglés, con los nombres exactos de `data-model.md`. Textos visibles en español.
+- [ ] Los nombres de colecciones salen de constantes, nunca escritos a mano en cada pantalla.
 - [ ] Botones con solo ícono tienen `tooltip` o `Semantics`.
