@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
 
-/// Pantalla provisional para rutas que todavía no tienen su pantalla real.
-/// Muestra el título, el responsable y el argumento recibido (si hay).
+/// Pantalla provisional para rutas que todavía no tienen su pantalla real
+/// Muestra el título, el responsable y el argumento recibido (si hay)
 class PlaceholderScreen extends StatelessWidget {
   const PlaceholderScreen({
     super.key,

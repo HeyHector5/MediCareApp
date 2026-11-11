@@ -3,6 +3,7 @@ import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 
 import '../core/widgets/placeholder_screen.dart';
+import '../models/collections.dart';
 import 'doctor_shell.dart';
 import 'patient_shell.dart';
 
@@ -46,8 +47,7 @@ class _RoleRouterState extends State<_RoleRouter> {
   @override
   void initState() {
     super.initState();
-    // Cuando existan las constantes de colecciones, usar Collections.users
-    _userDoc = FirebaseFirestore.instance.collection('users').doc(widget.uid).get();
+    _userDoc = FirebaseFirestore.instance.collection(Collections.users).doc(widget.uid).get();
   }
 
   @override
