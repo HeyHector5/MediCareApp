@@ -487,7 +487,7 @@ class AppTheme {
 
 ---
 
-## 11. Checklist que la IA debe verificar antes de entregar código
+## 11. Checklist a verificar antes de entregar código
 
 - [ ] No hay `Color(...)`, `Colors.xxx`, `TextStyle(...)` ni medidas sueltas fuera de `lib/core/`.
 - [ ] Botones, campos, tarjetas y chips usan los widgets comunes.
