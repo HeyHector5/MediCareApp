@@ -1,0 +1,273 @@
+=====================================================================
+                MEDICARE APP
+          Sistema de Gestión de Citas Médicas
+              División de Responsabilidades
+          (incluye las vistas del médico)
+=====================================================================
+
+Descripción del proyecto:
+Aplicación que permite a pacientes programar, cancelar y consultar
+citas médicas. El médico tiene sus propias vistas para ver su agenda,
+atender y registrar las consultas.
+
+Tecnologías: Flutter Navigation, Firebase Authentication,
+Cloud Firestore, Providers o Riverpod.
+
+---------------------------------------------------------------------
+VISTAS DEL MÉDICO - QUIÉN HACE QUÉ
+---------------------------------------------------------------------
+  Vista del médico                          | Responsable
+  ------------------------------------------+------------------------
+  Menú y navegación propia del médico       | ELVIS
+  Agenda del día y de la semana             | ANGEL
+  Detalle de la cita (datos del paciente)   | ANGEL
+  Registro de la consulta                   | ANGEL
+  Gestión de disponibilidad (días y horas)  | ERIC
+  Lista de pacientes y su historial         | ERIC
+  Mensajes y chat del lado del médico       | HECTOR (adaptación)
+  Perfil del médico (editable)              | HECTOR (adaptación)
+
+  CARLA y ROBINSON no crean pantallas nuevas del médico: dejan listas
+  las funciones y los componentes que usan los demás (ver abajo).
+
+Reglas de estados (igual que en branding.md): una cita solo puede estar
+Programada, Completada o Cancelada. El médico no agrega estados nuevos.
+
+---------------------------------------------------------------------
+ELVIS - Arquitectura base, base de datos, navegación
+        e integración
+---------------------------------------------------------------------
+Funcionalidad a cargo: Estructura general de la aplicación y
+diseño general de la base de datos.
+
+Tareas:
+  - Crear el proyecto Flutter y definir la estructura de carpetas
+    (models, services, providers, screens, widgets).
+  - Configurar Firebase en el proyecto (Android/iOS).
+  - Base de datos (Cloud Firestore):
+      * Diseñar el modelo de datos general (diagrama con todas
+        las colecciones y cómo se relacionan: usuarios, medicos,
+        especialidades, citas, conversaciones, mensajes,
+        historial).
+      * Definir los nombres de campos y tipos de datos que
+        todo el equipo debe respetar.
+      * Configurar las reglas de seguridad de Firestore
+        (cada paciente solo ve sus propios datos y citas).
+      * Crear los índices necesarios para las consultas.
+      * Revisar las colecciones que crea cada integrante para
+        que sigan el modelo acordado.
+  - Configurar el manejo de estado con Provider o Riverpod
+    y definir las convenciones que usará todo el equipo.
+  - Implementar la navegación (rutas con nombre, rutas protegidas
+    según sesión iniciada, menú o barra de navegación inferior).
+  - Definir el tema visual (colores, tipografía, widgets comunes).
+  - Integrar los módulos de los demás integrantes y resolver
+    conflictos en el repositorio.
+  - Coordinar las pruebas generales de la aplicación.
+
+  Vistas del médico (parte de ELVIS):
+  - Navegación por rol: al iniciar sesión, el paciente entra a su
+    menú y el médico entra al suyo. Menú inferior del médico con
+    4 pestañas: Agenda, Pacientes, Mensajes, Perfil.
+  - Rutas protegidas por rol: un paciente no puede abrir pantallas
+    del médico, y viceversa.
+  - Ampliar el modelo de datos para el médico:
+      * Campos de la consulta dentro de "citas": diagnóstico, notas,
+        recomendaciones, quién canceló (paciente o médico).
+      * Relación médico-usuario (el usuario con rol médico apunta
+        a su documento en "medicos").
+      * Estructura de disponibilidad (la define ERIC, ELVIS la
+        aprueba).
+  - Reglas de seguridad por rol: el médico solo lee y edita las
+    citas donde él es el médico, y solo ve a los pacientes que
+    ha atendido.
+  - Crear cuentas de médico de prueba para que todos puedan probar.
+
+Temas aplicados: Flutter Navigation, Cloud Firestore,
+Providers/Riverpod.
+
+---------------------------------------------------------------------
+ANGEL - Autenticación y videollamadas
+        + agenda y atención del médico
+---------------------------------------------------------------------
+Funcionalidad mínima: Registro e inicio de sesión.
+Funcionalidad avanzada: Videollamadas mediante integración externa.
+
+Tareas:
+  - Pantallas de registro, inicio de sesión y recuperación
+    de contraseña.
+  - Implementar Firebase Authentication (correo/contraseña).
+  - Validaciones de formularios y mensajes de error.
+  - Manejo de sesión (mantener sesión activa y cerrar sesión).
+  - Distinguir roles de usuario (paciente / médico).
+  - Integrar un servicio externo de videollamadas (por ejemplo,
+    Jitsi Meet, Agora o Zego) y enlazarlo a una cita reservada.
+
+  Vistas del médico (parte de ANGEL):
+  - Agenda del médico: citas del día y de la semana, con el chip
+    de estado de cada una.
+  - Detalle de la cita (vista del médico): datos del paciente,
+    motivo de la consulta y los botones "Iniciar videollamada",
+    "Reprogramar" y "Cancelar cita".
+  - Registro de la consulta: formulario con diagnóstico, notas y
+    recomendaciones. Al guardar, la cita pasa a Completada.
+  - Usar las funciones de CARLA para reprogramar y cancelar. ANGEL
+    no escribe su propia lógica de horarios.
+  - Seguir el flujo: Agenda > Detalle de la cita > Videollamada >
+    Registro de la consulta.
+
+Temas aplicados: Firebase Authentication, Cloud Firestore,
+Providers/Riverpod.
+
+---------------------------------------------------------------------
+HECTOR - Perfiles de usuario y chat
+---------------------------------------------------------------------
+Funcionalidad mínima: Gestión de perfiles.
+Funcionalidad avanzada: Chat paciente-médico.
+
+Tareas:
+  - Diseñar la colección "usuarios" en Cloud Firestore
+    (nombre, teléfono, fecha de nacimiento, rol, foto, etc.).
+  - Pantalla para ver y editar el perfil del paciente.
+  - Pantalla de perfil del médico (especialidad, descripción,
+    años de experiencia).
+  - Implementar el chat en tiempo real entre paciente y médico
+    usando Firestore (colección de conversaciones y mensajes).
+  - Lista de conversaciones y pantalla de mensajes.
+
+  Vistas del médico (parte de HECTOR, sin pantallas nuevas):
+  - El perfil del médico lo puede editar el propio médico
+    (descripción, años de experiencia, foto).
+  - La lista de conversaciones y el chat funcionan para los dos
+    roles: el médico ve sus conversaciones con los pacientes
+    (nombre y avatar del paciente).
+
+Temas aplicados: Cloud Firestore, Providers/Riverpod.
+
+---------------------------------------------------------------------
+ERIC - Médicos y especialidades
+       + disponibilidad y pacientes del médico
+---------------------------------------------------------------------
+Funcionalidad mínima: Listado de médicos por especialidad.
+
+Tareas:
+  - Diseñar las colecciones "medicos" y "especialidades"
+    en Cloud Firestore.
+  - Cargar datos de prueba (médicos, especialidades y horarios).
+  - Pantalla de listado de especialidades.
+  - Pantalla de listado de médicos filtrados por especialidad.
+  - Buscador de médicos por nombre.
+  - Pantalla de detalle del médico con sus horarios disponibles.
+  - Definir la estructura de disponibilidad (días y horas)
+    que usará el módulo de reservas.
+
+  Vistas del médico (parte de ERIC):
+  - Gestión de disponibilidad: pantalla donde el médico elige los
+    días que atiende, hora de inicio y fin, duración de cada cita
+    y fechas bloqueadas. Guarda en la estructura que ERIC definió.
+  - Lista de pacientes: pacientes que el médico ha atendido, con
+    buscador por nombre.
+  - Detalle del paciente: sus consultas pasadas con ese médico, en
+    solo lectura. Reutiliza el componente de detalle de consulta
+    que deja ROBINSON.
+
+Temas aplicados: Cloud Firestore, Flutter Navigation,
+Providers/Riverpod.
+
+---------------------------------------------------------------------
+CARLA - Reserva y cancelación de citas
+---------------------------------------------------------------------
+Funcionalidades mínimas: Reserva de citas y cancelación de citas.
+
+Tareas:
+  - Diseñar la colección "citas" en Cloud Firestore
+    (paciente, médico, fecha, hora, estado, motivo).
+  - Pantalla de reserva: selección de fecha y hora disponible.
+  - Validar que no se reserven horarios ya ocupados.
+  - Pantalla de confirmación de la cita.
+  - Pantalla de "Mis citas" (citas próximas).
+  - Cancelación de citas con confirmación y cambio de estado.
+  - Liberar el horario cuando una cita se cancela.
+
+  Vistas del médico (parte de CARLA, sin pantallas nuevas):
+  - Dejar como funciones reutilizables, con las mismas validaciones
+    para paciente y médico:
+      * cancelarCita(citaId, quienCancela)
+      * reprogramarCita(citaId, nuevaFecha, nuevaHora)
+    Deben validar horarios ocupados y liberar el horario anterior.
+  - Guardar quién canceló la cita (paciente o médico).
+  - Entregar estas funciones temprano: ANGEL las usa en el detalle
+    de la cita del médico.
+
+Temas aplicados: Cloud Firestore, Providers/Riverpod.
+
+---------------------------------------------------------------------
+ROBINSON - Historial de consultas y notificaciones
+---------------------------------------------------------------------
+Funcionalidad mínima: Historial de consultas.
+Funcionalidad avanzada: Notificaciones.
+
+Tareas:
+  - Pantalla de historial con las citas completadas y canceladas.
+  - Filtros del historial por fecha, médico o especialidad.
+  - Pantalla de detalle de una consulta pasada
+    (diagnóstico, notas, recomendaciones).
+  - Implementar notificaciones (Firebase Cloud Messaging y/o
+    notificaciones locales) para:
+      * Confirmación de cita reservada.
+      * Recordatorio antes de la cita.
+      * Aviso de cancelación.
+
+  Vistas del médico (parte de ROBINSON, sin pantallas nuevas):
+  - Notificaciones también para el médico: nueva cita reservada,
+    cita cancelada por el paciente y recordatorio de su agenda.
+  - Hacer el detalle de consulta como componente reutilizable
+    (diagnóstico, notas, recomendaciones) para que ERIC lo use en
+    el historial del paciente.
+  - Leer los campos de la consulta que guarda ANGEL, siguiendo el
+    modelo de ELVIS.
+
+Temas aplicados: Cloud Firestore, Providers/Riverpod.
+
+---------------------------------------------------------------------
+ORDEN DE TRABAJO (para evitar bloqueos)
+---------------------------------------------------------------------
+  1. ELVIS: proyecto base, modelo de datos ampliado, rutas por rol
+     y cuentas de prueba.
+  2. CARLA: funciones de cancelar y reprogramar citas.
+     ERIC: estructura de disponibilidad.
+     ROBINSON: componente de detalle de consulta.
+  3. ANGEL y ERIC: vistas del médico, usando lo anterior.
+  4. HECTOR y ROBINSON: adaptar chat y notificaciones al médico.
+
+---------------------------------------------------------------------
+RESPONSABILIDADES COMPARTIDAS (TODO EL EQUIPO)
+---------------------------------------------------------------------
+  - Seguir la estructura, convenciones y modelo de base de datos
+    definidos por ELVIS.
+  - Cada integrante implementa en Firestore las colecciones de su
+    módulo, según el modelo general acordado.
+  - Seguir branding.md en todas las pantallas, incluidas las del
+    médico.
+  - Trabajar en ramas separadas en el repositorio y hacer
+    pull requests para integrar cambios.
+  - Probar su propio módulo antes de entregarlo.
+  - Documentar brevemente su parte para el informe final.
+  - Participar en la presentación del proyecto.
+
+---------------------------------------------------------------------
+RESUMEN
+---------------------------------------------------------------------
+  ELVIS     | Arquitectura, modelo de base de datos, reglas de
+            | seguridad, navegación (incluida la del médico),
+            | integración
+  ANGEL     | Registro, inicio de sesión, videollamadas, agenda,
+            | detalle de cita y registro de consulta del médico
+  HECTOR    | Gestión de perfiles, chat paciente-médico (ambos roles)
+  ERIC      | Listado de médicos por especialidad, disponibilidad y
+            | lista de pacientes del médico
+  CARLA     | Reserva y cancelación de citas, funciones de cancelar
+            | y reprogramar para ambos roles
+  ROBINSON  | Historial de consultas, notificaciones (ambos roles),
+            | componente de detalle de consulta
+=====================================================================
