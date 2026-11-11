@@ -56,7 +56,6 @@ class DefaultFirebaseOptions {
     projectId: 'medicare-d53b3',
     storageBucket: 'medicare-d53b3.firebasestorage.app',
   );
-
   static const FirebaseOptions ios = FirebaseOptions(
     apiKey: 'AIzaSyA9gkaQHPoJFik7I0Z6iTHwazuP3eb6dJM',
     appId: '1:1042163834812:ios:3425d86b2733eb2c2455b9',
